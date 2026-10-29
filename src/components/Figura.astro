@@ -1,0 +1,113 @@
+
+---
+// Figura principal de los artículos de CAESIUS.
+
+interface Props {
+  src: string;
+  alt: string;
+  pie?: string;
+  interactiva?: string;
+}
+
+const { src, alt, pie, interactiva } = Astro.props;
+
+const interactivas = import.meta.glob('/src/figuras/*.html', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+let html: string | undefined;
+
+if (interactiva) {
+  html = interactivas[`/src/figuras/${interactiva}.html`];
+
+  if (!html) {
+    throw new Error(
+      `Figura interactiva no encontrada: src/figuras/${interactiva}.html`
+    );
+  }
+}
+---
+
+<figure
+  class:list={[
+    'figura',
+    'figura--principal',
+    { 'figura--interactiva': !!html }
+  ]}
+>
+  <div class="figura__estatica">
+    <img
+      src={src}
+      alt={alt}
+      loading="eager"
+      decoding="async"
+    />
+  </div>
+
+  {html && (
+    <div
+      class="figura__interactiva"
+      set:html={html}
+    />
+  )}
+
+  {pie && (
+    <figcaption>{pie}</figcaption>
+  )}
+</figure>
+
+<style>
+  .figura {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .figura__estatica {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #ffffff;
+  }
+
+  .figura__estatica img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .figura__interactiva {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    border-radius: 12px;
+    background: #ffffff;
+  }
+
+  .figura figcaption {
+    margin-top: 12px;
+    padding: 0 2px;
+
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: #a8a8a8;
+  }
+
+  @media (max-width: 700px) {
+    .figura__estatica,
+    .figura__interactiva {
+      border-radius: 8px;
+    }
+
+    .figura figcaption {
+      font-size: 11px;
+    }
+  }
+</style>
