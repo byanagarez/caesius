@@ -1,10 +1,10 @@
 ---
 nombre: Giulio Consoli
-rol: Fundador de Caesius
+rol: Co-fundador de Caesius
 iniciales: GC
 enlaces:
   - etiqueta: GitHub
     url: https://github.com/GiulioConsoli
 ---
 
-Fundador de Caesius.
+Co-fundador de Caesius.
